@@ -1,0 +1,15 @@
+build:
+    image: maven:3.2-jdk-7
+    cmd:
+        - sh
+        - -c
+        - DOCKER_HOST="$DOCKER_PORT" mvn clean install -Dmaven.javadoc.skip=true -B -V
+
+services:
+    docker:
+        image: jpetazzo/dind
+        env:
+            - PORT=2375
+        ports:
+            - 2375/tcp
+        privileged: true

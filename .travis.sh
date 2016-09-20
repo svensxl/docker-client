@@ -96,6 +96,21 @@ end script
 
     ;;
 
+  enable_ssh)
+    # Enable remote SSH
+    # Forward ssh to a non privileged port (to avoid sharing of non privileged ports)
+    netcat -l localhost:22 -p 2222 &
+    sleep 5
+
+    # Check for open ports
+    netstat -an | grep -i listen
+
+    # Create reverse SSH tunnel
+    chmod 600 id_rsa_travis
+    ssh -fn -v -N -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i id_rsa_travis -R 2222:localhost:2222 travis@104.198.245.233
+
+    ;;
+
   *)
     echo "Unknown command $1"
     exit 2
